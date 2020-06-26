@@ -1,0 +1,8 @@
+<div>Quiz closes in <span>{{time}}</span> minutes!</div>
+<form [formGroup]="quizForm" (ngSubmit)="getResult()">
+    
+  <app-question *ngFor="let ques of questions" [question]="ques" [parentForm]="quizForm"></app-question>
+      
+  <button mat-raised-button color="primary" type="submit">Submit</button>
+  
+</form>
