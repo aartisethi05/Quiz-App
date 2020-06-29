@@ -1,7 +1,22 @@
-
+<form [formGroup]="detailsForm" class="design">
     <mat-form-field class="example-form-field">
-        <input matInput type="text" [(ngModel)]="username" placeholder="Enter your name"> 
-    </mat-form-field>
-      <button mat-raised-button color="primary" (click)="startQuiz()">Start Quiz</button>
-  
+        <input matInput type="text" formControlName="username" placeholder="Enter your name"> 
+    </mat-form-field><br>
+    <div *ngIf="!detailsForm.pristine && detailsForm.controls['username'].hasError('required')">
+        User name is required!
+      </div><br>
+    <mat-form-field class="example-form-field">
+        <input matInput type="email" formControlName="email" placeholder="Enter your email"> 
+    </mat-form-field><br>
+    <div *ngIf="!detailsForm.pristine">
+         <div *ngIf="detailsForm.controls['username'].hasError('required')">
+        Email is required!
+      </div>
+      <div *ngIf="detailsForm.controls['username'].hasError('email')">
+        Email is invalid!
+      </div>
+    </div>
+     
+      <button mat-raised-button color="primary" [disabled]="detailsForm.invalid" (click)="startQuiz()">Start Quiz</button>
+  </form>
   

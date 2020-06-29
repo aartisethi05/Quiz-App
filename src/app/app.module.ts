@@ -14,16 +14,16 @@ import { QuizComponent } from './quiz/quiz.component';
 import { QuestionComponent } from './question/question.component';
 import { ResultComponent } from './result/result.component';
 import {MatRadioModule} from '@angular/material/radio';
-
-
+import {HttpClientModule} from '@angular/common/http';
+import { BackButtonDisableModule } from 'angular-disable-browser-back-button';
 @NgModule({
   declarations: [
     AppComponent,
     DetailsComponent,
     QuizComponent,
     QuestionComponent,
-    ResultComponent,
-    
+    ResultComponent
+  
   ],
   imports: [
     BrowserModule,
@@ -31,7 +31,9 @@ import {MatRadioModule} from '@angular/material/radio';
     BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
-    MatFormFieldModule,MatIconModule,MatButtonModule,MatInputModule,MatCardModule,MatRadioModule
+    HttpClientModule,
+    MatFormFieldModule,MatIconModule,MatButtonModule,MatInputModule,MatCardModule,MatRadioModule,
+    BackButtonDisableModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]

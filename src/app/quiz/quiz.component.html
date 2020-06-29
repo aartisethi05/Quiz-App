@@ -1,8 +1,26 @@
-<div>Quiz closes in <span>{{time}}</span> minutes!</div>
-<form [formGroup]="quizForm" (ngSubmit)="getResult()">
-    
-  <app-question *ngFor="let ques of questions" [question]="ques" [parentForm]="quizForm"></app-question>
-      
-  <button mat-raised-button color="primary" type="submit">Submit</button>
-  
-</form>
+<div>
+  Quiz closes in <span>{{ time }}</span> minutes!
+</div>
+<!-- <form [formGroup]="quizForm" (ngSubmit)="getResult()"> -->
+
+<mat-card *ngFor="let ques of questions">
+  {{ ques.title }}
+  <br />
+  <input type="hidden" value="{{ ques._id }}" />
+  <mat-radio-group
+    aria-labelledby="example-radio-group-label"
+    class="example-radio-group"
+  >
+    <mat-radio-button
+      class="example-radio-button"
+      *ngFor="let option of ques.answers"
+      [value]="option"
+      (change)="onchange($event, ques.title,ques._id)"
+    >
+      {{ option }}
+    </mat-radio-button>
+  </mat-radio-group>
+</mat-card>
+<button mat-raised-button color="primary" type="submit" (click)="getResult()">Submit</button>
+
+<!-- </form> -->

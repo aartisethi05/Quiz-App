@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
+import { FormGroup, FormBuilder, FormControl, FormArray } from '@angular/forms';
+import { ApiServiceService } from '../api-service.service';
 
 @Component({
   selector: 'app-quiz',
@@ -8,24 +9,60 @@ import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
   styleUrls: ['./quiz.component.css'],
 })
 export class QuizComponent implements OnInit {
-  quizForm: FormGroup;
-  constructor(private router: Router, private fb: FormBuilder) {
-    this.quizForm = fb.group({ ques: [] });
-
+  questions;
+  answers=[];
+  userid = localStorage.getItem('userId');
+  constructor(
+    private router: Router,
+    private fb: FormBuilder,
+    private webservice: ApiServiceService
+  ) {
     this.timer = null;
 
     this.time = null;
   }
   ngOnInit(): void {}
+
   ngAfterViewInit(): void {
+    this.allQuestions();
     this.clock();
   }
+  allQuestions() {
+    this.webservice.getQuestions().subscribe((data) => {
+      this.questions = data.payload.quizzes;
+      console.log('local' + localStorage.getItem('userId'));
+    });
+  }
+
   time: any = '10:00';
-  questions = ['aaa', 'bbb'];
-  timer: null | NodeJS.Timeout;
+  
+  timer;
+  data=[];
+  onchange(e, title, id) {
+    if((this.answers.find(x => x.id === id)) !== undefined){
+    console.log(this.answers.find(x => x.id === id));
+      this.answers.find(x => x.id === id).ans=e.value;
+    }
+    else{
+    this.answers.push({
+      id:id,
+      ques:title,
+      ans:e.value
+    });
+  }
+   // console.log(`Value is`, e.value);
+   // console.log(`Title is`, title)
+  }
   getResult() {
-    this.router.navigate(['result']);
-    console.log(this.quizForm.value);
+    console.log(this.answers);
+    this.data=[{
+      userId:this.userid,
+      answers:this.answers
+    }]
+    console.log(this.data);
+    // this.webservice.submitQuiz(this.quizForm.value).subscribe((data) => {});
+    // this.router.navigate(['result']);
+
     clearInterval(this.timer);
   }
   startTimer(durationInSeconds) {
@@ -40,16 +77,15 @@ export class QuizComponent implements OnInit {
       seconds = seconds < 10 ? '0' + seconds : seconds;
       this.time = minutes + ':' + seconds;
       durationInSeconds--;
-      console.log(durationInSeconds);
+      // console.log(durationInSeconds);
       if (durationInSeconds === 0) {
-        alert('timeout');
-        this.getResult();
+        //  alert('Timeout!');
+        //this.getResult();
       }
     }, 1000);
   }
   clock() {
     var timeInSeconds = 60;
     this.startTimer(timeInSeconds);
-    setTimeout(this.getResult, timeInSeconds * 1000);
   }
 }
