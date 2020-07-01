@@ -3,7 +3,7 @@
 </div>
 <!-- <form [formGroup]="quizForm" (ngSubmit)="getResult()"> -->
 
-<mat-card *ngFor="let ques of questions">
+<mat-card *ngFor="let ques of all_questions">
   {{ ques.title }}
   <br />
   <input type="hidden" value="{{ ques._id }}" />

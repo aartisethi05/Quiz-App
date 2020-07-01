@@ -14,8 +14,9 @@ export class ApiServiceService {
   getQuestions():Observable<any>{
     return this.api.get('http://localhost:3000/api/v1/quiz');
   }
-  submitQuiz(answers):Observable<any>{
-    return this.api.post('',answers);
+  submitQuiz(answers,userid):Observable<any>{
+    console.log(answers);
+    return this.api.post(`http://localhost:3000/api/v1/users/save-quiz/${userid}`,answers);
   }
 
 }

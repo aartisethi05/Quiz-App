@@ -9,8 +9,8 @@ import { ApiServiceService } from '../api-service.service';
   styleUrls: ['./quiz.component.css'],
 })
 export class QuizComponent implements OnInit {
-  questions;
-  answers=[];
+  all_questions;
+  questions=[];
   userid = localStorage.getItem('userId');
   constructor(
     private router: Router,
@@ -29,39 +29,34 @@ export class QuizComponent implements OnInit {
   }
   allQuestions() {
     this.webservice.getQuestions().subscribe((data) => {
-      this.questions = data.payload.quizzes;
-      console.log('local' + localStorage.getItem('userId'));
+      this.all_questions = data.payload.quizzes;
     });
   }
 
   time: any = '10:00';
   
   timer;
-  data=[];
+  data;
   onchange(e, title, id) {
-    if((this.answers.find(x => x.id === id)) !== undefined){
-    console.log(this.answers.find(x => x.id === id));
-      this.answers.find(x => x.id === id).ans=e.value;
+    if((this.questions.find(x => x.title === title)) !== undefined){
+      this.questions.find(x => x.title === title).answer=e.value;
     }
     else{
-    this.answers.push({
-      id:id,
-      ques:title,
-      ans:e.value
+    this.questions.push({
+      title:title,
+      answer:e.value
     });
   }
-   // console.log(`Value is`, e.value);
-   // console.log(`Title is`, title)
   }
   getResult() {
-    console.log(this.answers);
-    this.data=[{
-      userId:this.userid,
-      answers:this.answers
-    }]
-    console.log(this.data);
-    // this.webservice.submitQuiz(this.quizForm.value).subscribe((data) => {});
-    // this.router.navigate(['result']);
+    this.data={
+      questions:this.questions
+    }
+    console.log(this.questions);
+     this.webservice.submitQuiz(this.data,this.userid).subscribe((data) => {
+       console.log(data.msg);
+     });
+     this.router.navigate(['result']);
 
     clearInterval(this.timer);
   }
@@ -77,10 +72,9 @@ export class QuizComponent implements OnInit {
       seconds = seconds < 10 ? '0' + seconds : seconds;
       this.time = minutes + ':' + seconds;
       durationInSeconds--;
-      // console.log(durationInSeconds);
       if (durationInSeconds === 0) {
-        //  alert('Timeout!');
-        //this.getResult();
+     //  alert('Timeout!');
+     // this.getResult();
       }
     }, 1000);
   }
